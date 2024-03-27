@@ -1,8 +1,10 @@
+import random
 import time
+from typing import Any
 
 import pygame
 from load_image import load_image
-from sprites_group import all_sprites, neutral_group, player_group, enemy_group
+from sprites_group import all_sprites, neutral_group, player_group, enemy_group, event_group
 import events_list
 
 
@@ -33,7 +35,7 @@ class PlayerShip(Ship):
         super().__init__(screen, player_group)
         self.rect.centerx = self.screen_rect.centerx
         self.rect.centery = self.screen_rect.bottom - self.rect.height // 2 + 1
-        self.speed = 2
+        self.speed = 22
         self.time = time.time()
         self.timer = time.time()
 
@@ -69,12 +71,17 @@ class PlayerShip(Ship):
                 self.rect.centery = y
         crash = pygame.sprite.spritecollide(self, enemy_group, True)
         if crash:
-            print(1)
+            event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
 
 
 class EnemyShip(Ship):
     def __init__(self, screen):
         super().__init__(screen, enemy_group)
         self.image = load_image('sprites/ship_e.png', -1)
-        self.rect.centerx = self.screen_rect.centerx
+        self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        pass
+
+

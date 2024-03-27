@@ -2,6 +2,7 @@ import pygame
 import sys
 import os
 import sprites_group
+from game import Game
 
 from gun_ship import PlayerShip, EnemyShip
 # from load_image import load_image
@@ -18,7 +19,8 @@ def main():
     clock = pygame.time.Clock()
     gun = PlayerShip(screen)
     prev_mouse_pos = gun.rect.center
-    e_gan = EnemyShip(screen)
+    game = Game(screen)
+
 
     running = True
     while running:
@@ -26,6 +28,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+        game.update()
         current_mouse_pos = pygame.mouse.get_pos()
         if current_mouse_pos != prev_mouse_pos:
             prev_mouse_pos = current_mouse_pos
@@ -33,8 +36,14 @@ def main():
         # Обновление позиции спрайта
         gun.update(*current_mouse_pos)
         screen.fill((0, 0, 0))
-        gun.render()
+
+        sprites_group.event_group.update()
+
+        sprites_group.event_group.draw(screen)
         sprites_group.enemy_group.draw(screen)
+        gun.render()
+        game.render_score()
+
         pygame.display.flip()
         clock.tick(FPS)
 
