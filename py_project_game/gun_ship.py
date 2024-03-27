@@ -82,6 +82,8 @@ class EnemyShip(Ship):
         self.rect.top = self.screen_rect.top + 5
 
     def update(self, *args: Any, **kwargs: Any) -> None:
+        self.rect.centerx -= random.choice([1, 2, 3, 4, -1, - 2, -3, -4, 0])
+        self.rect.centery += 1
         pass
 
 

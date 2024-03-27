@@ -38,7 +38,7 @@ def main():
         screen.fill((0, 0, 0))
 
         sprites_group.event_group.update()
-
+        sprites_group.enemy_group.update()
         sprites_group.event_group.draw(screen)
         sprites_group.enemy_group.draw(screen)
         gun.render()
