@@ -10,6 +10,7 @@ import events_list
 
 
 class Ship(pygame.sprite.Sprite):
+    """Базовый класс корабля"""
 
     def __init__(self, screen, game, *groups: all_sprites):
         """Инициализация корабля"""
@@ -37,6 +38,7 @@ class Ship(pygame.sprite.Sprite):
 
 
 class PlayerShip(Ship):
+    """Класс корабля персонажа"""
 
     def __init__(self, screen, game):
         """Инициализация корабля"""
@@ -44,11 +46,13 @@ class PlayerShip(Ship):
         self.rect.centerx = self.screen_rect.centerx
         self.rect.centery = self.screen_rect.bottom - self.rect.height // 2 + 1
         self.game = game
-        self.speed = 10
+        self.speed = 5
         self.rapid_fire = 1
         self.time_shot = time.time()
         self.timer_shot = time.time()
         self.hit_point = 50
+        self.guns = 3
+
 
 
     def render(self):
@@ -56,7 +60,7 @@ class PlayerShip(Ship):
         self.screen.blit(self.image, self.rect)
 
     def update(self, x, y):
-        """Смещение центра корабля в координаты"""
+        """Обновления статуса """
         shiftx = self.rect.centerx - x
         shifty = self.rect.centery - y
         if shifty or shiftx:
@@ -77,6 +81,7 @@ class PlayerShip(Ship):
                     self.rect.centery += self.speed
             else:
                 self.rect.centery = y
+        # Столкновения с врагами
         crash = pygame.sprite.spritecollide(self, enemy_group, True)
         if crash:
             crash[0].score_up()
@@ -85,6 +90,7 @@ class PlayerShip(Ship):
                 event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
             elif crash[0].__class__ in shot_list:
                 event_group.add(events_list.LiteShotBoom(self.screen, self.rect.centerx, self.rect.top))
+        # Столкновения с бафами
         crash = pygame.sprite.spritecollide(self, neutral_group, True)
         if crash:
             for ship in crash:
@@ -92,24 +98,38 @@ class PlayerShip(Ship):
         self.game.hit_point = self.hit_point
 
     def shot_event(self):
+        """Выстрел"""
         if self.timer_shot - self.time_shot > self.rapid_fire:
-            LitePlayerShot(self.screen, self.game, self)
+            if self.guns >= 1:
+                LitePlayerShot(self.screen, self.game, self)
+            if self.guns >= 2:
+                LitePlayerShot2(self.screen, self.game, self)
+            if self.guns >= 3:
+                LitePlayerShot3(self.screen, self.game, self)
+                LitePlayerShot4(self.screen, self.game, self)
             self.time_shot = time.time()
         self.timer_shot = time.time()
 
     def upgrade_ship(self, ship):
+        """Поднятие бафа"""
         if 'Hp' in ship.__class__.__name__:
             self.hit_point += buff_ships.buff_ships[ship.__class__.__name__]
         if 'Fire' in ship.__class__.__name__:
+            if self.rapid_fire == 0.1:
+                self.guns = min(self.guns + 1, 3)
+                self.rapid_fire = 0.6
+                self.game.rapid_fire = self.rapid_fire
+                return
             self.rapid_fire = max(self.rapid_fire - buff_ships.buff_ships[ship.__class__.__name__], 0.1)
             self.game.rapid_fire = self.rapid_fire
+        if 'Sp' in ship.__class__.__name__:
+            self.speed += buff_ships.buff_ships[ship.__class__.__name__]
         pass
 
-    def upgrade_stats(self):
-        pass
 
-
+# Классы вражеских кораблей
 class EnemyShip(Ship):
+    """Простейший корабль противника"""
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
         self.image = load_image('sprites/ship_e.png', -1)
@@ -123,18 +143,21 @@ class EnemyShip(Ship):
         self.damage = 5
 
     def update(self, *args: Any, **kwargs: Any) -> None:
+        """Обновление"""
         self.rect.centerx -= random.choice([1, 2, 3, 4, -1, - 2, -3, -4, 0])
         self.rect.centery += 1
         self.shot_event()
         pass
 
     def shot_event(self):
+        """Стрельба корабля"""
         if self.timer_shot - self.time_shot > self.rapid_fire:
             LiteEnemyShot(self.screen, self.game, self)
             self.time_shot = time.time()
         self.timer_shot = time.time()
 
 
+# Классы выстрелов игрока
 class LitePlayerShot(Ship):
     """Легкий выстрел игрока"""
     def __init__(self, screen, game, pl_ship):
@@ -146,6 +169,110 @@ class LitePlayerShot(Ship):
         self.damage = 5
 
     def update(self, *args: Any, **kwargs: Any) -> None:
+        """Логика базового выстрела игрока"""
+        self.rect.centery -= 10
+        crash = pygame.sprite.spritecollide(self, enemy_group, False)
+        if crash:
+            event_group.add(events_list.LiteShotBoom(self.screen, self.rect.centerx, self.rect.top))
+            player_shot_group.remove(self)
+            crash[0].hit_point -= self.damage
+            if crash[0].hit_point <= 0:
+                crash[0].score_up()
+                if crash[0].__class__.__name__ in ship_list:
+                    event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
+                enemy_group.remove(crash[0])
+        pass
+
+
+class LitePlayerShot2(Ship):
+    """Второе орудиe"""
+    def __init__(self, screen, game, pl_ship):
+        super().__init__(screen, game, player_shot_group)
+        self.player_ship = pl_ship
+        self.image = load_image('sprites/shot_1.png')
+        self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 4
+        self.rect.centery = self.player_ship.rect.centery + 20
+        self.damage = 5
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        """Логика базового выстрела игрока"""
+        self.rect.centery -= 10
+        crash = pygame.sprite.spritecollide(self, enemy_group, False)
+        if crash:
+            event_group.add(events_list.LiteShotBoom(self.screen, self.rect.centerx, self.rect.top))
+            player_shot_group.remove(self)
+            crash[0].hit_point -= self.damage
+            if crash[0].hit_point <= 0:
+                crash[0].score_up()
+                if crash[0].__class__.__name__ in ship_list:
+                    event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
+                enemy_group.remove(crash[0])
+
+
+class LitePlayerShot3(Ship):
+    """Второе орудиe"""
+    def __init__(self, screen, game, pl_ship):
+        super().__init__(screen, game, player_shot_group)
+        self.player_ship = pl_ship
+        self.image = load_image('sprites/shot_1.png')
+        self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 4
+        self.rect.centery = self.player_ship.rect.centery + 20
+        self.damage = 5
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        """Логика базового выстрела игрока"""
+        self.rect.centery -= 10
+        self.rect.centerx += 10
+        crash = pygame.sprite.spritecollide(self, enemy_group, False)
+        if crash:
+            event_group.add(events_list.LiteShotBoom(self.screen, self.rect.centerx, self.rect.top))
+            player_shot_group.remove(self)
+            crash[0].hit_point -= self.damage
+            if crash[0].hit_point <= 0:
+                crash[0].score_up()
+                if crash[0].__class__.__name__ in ship_list:
+                    event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
+                enemy_group.remove(crash[0])
+
+
+class LitePlayerShot4(Ship):
+    """Второе орудиe"""
+    def __init__(self, screen, game, pl_ship):
+        super().__init__(screen, game, player_shot_group)
+        self.player_ship = pl_ship
+        self.image = load_image('sprites/shot_1.png')
+        self.rect.centerx = self.player_ship.rect.centerx
+        self.rect.centery = self.player_ship.rect.centery + 20
+        self.damage = 5
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        """Логика базового выстрела игрока"""
+        self.rect.centery -= 10
+        self.rect.centerx -= 10
+        crash = pygame.sprite.spritecollide(self, enemy_group, False)
+        if crash:
+            event_group.add(events_list.LiteShotBoom(self.screen, self.rect.centerx, self.rect.top))
+            player_shot_group.remove(self)
+            crash[0].hit_point -= self.damage
+            if crash[0].hit_point <= 0:
+                crash[0].score_up()
+                if crash[0].__class__.__name__ in ship_list:
+                    event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
+                enemy_group.remove(crash[0])
+
+
+class MediumPlayerShot(Ship):
+    """Средний выстрел игрока"""
+    def __init__(self, screen, game, pl_ship):
+        super().__init__(screen, game, player_shot_group)
+        self.player_ship = pl_ship
+        self.image = load_image('sprites/shot_1.png')
+        self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 2
+        self.rect.centery = self.player_ship.rect.centery + 20
+        self.damage = 10
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        """Логика среднего выстрела игрока"""
         self.rect.centery -= 10
         crash = pygame.sprite.spritecollide(self, enemy_group, False)
         if crash:
@@ -160,6 +287,7 @@ class LitePlayerShot(Ship):
         pass
 
 
+# Классы выстрелов противника
 class LiteEnemyShot(Ship):
     """Легкий выстрел противника"""
     def __init__(self, screen, game, pl_ship):
@@ -171,6 +299,7 @@ class LiteEnemyShot(Ship):
         self.damage = 1
 
     def update(self, *args: Any, **kwargs: Any) -> None:
+        """Логика стрельбы противника, базовый снаряд"""
         self.rect.centery += 3
         if self.rect.centery >= self.screen.get_height():
             event_group.remove(self)
@@ -178,15 +307,18 @@ class LiteEnemyShot(Ship):
 
 
 class MediumEnemyShot(LiteEnemyShot):
+    """улучшенный снаряд противника"""
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, pl_ship)
         self.damage = 5
 
 
 class HardEnemyShot(LiteEnemyShot):
+    """Топовый снаряд противника"""
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, pl_ship)
         self.damage = 15
 
-ship_list = [EnemyShip]
+
+ship_list = ['EnemyShip']
 shot_list = [LiteEnemyShot, HardEnemyShot, MediumEnemyShot]

@@ -21,12 +21,13 @@ class Game:
         self.timer_bonus = time.time()
         self.bonus_time = 5
         self.rapid_fire = 1
+        self.speed = 5
 
     def update(self):
         """Обновление сложности и спавн врагов"""
-        self.hard_lvl = self.hard_lvl_list.index(1 + self.game_score // 20)
-        # for i in range(1 + 1 * (self.hard_lvl // 50)):
-        # self.enemy_spawn()
+        self.hard_lvl = self.hard_lvl_list.index(1 + self.game_score // 200)
+        for i in range(1 + 1 * self.hard_lvl):
+            self.enemy_spawn()
         if self.timer_bonus - self.time_bonus > self.bonus_time:
             # print(1)
             # buff_ships.HpBonus(self.screen, self)
@@ -55,7 +56,7 @@ class Game:
         text = font.render(f'SCORE ({self.game_score})', 1, font_color)
         self.screen.blit(text, (30, 30))
 
-    def render_live(self):
+    def render_hit(self):
         font_color = (10, 200, 10)
         font = pygame.font.Font(None, 20)
         text = font.render(f'HP ({self.hit_point})', 1, font_color)
@@ -64,8 +65,13 @@ class Game:
     def render_rapid(self):
         font_color = (10, 10, 200)
         font = pygame.font.Font(None, 20)
-        text = font.render(f'HP ({self.rapid_fire})', 1, font_color)
+        text = font.render(f'attack speed ({round(1 / self.rapid_fire, 1)})', 1, font_color)
         self.screen.blit(text, (30, 90))
+
+    def render(self):
+        self.render_rapid()
+        self.render_hit()
+        self.render_score()
 
     def end_game(self):
         pygame.display.quit()

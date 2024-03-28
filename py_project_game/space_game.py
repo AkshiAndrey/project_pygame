@@ -16,8 +16,8 @@ def main():
     clock = pygame.time.Clock()
 
     game = Game(screen)
-    player_gan_ship = PlayerShip(screen, game)
-    prev_mouse_pos = player_gan_ship.rect.center
+    player_gun_ship = PlayerShip(screen, game)
+    prev_mouse_pos = player_gun_ship.rect.center
 
     running = True
     while running:
@@ -25,18 +25,18 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Стрельба игрока
-        if pygame.mouse.get_pressed()[0]:
-            player_gan_ship.shot_event()
-
         # Обновление статуса игры
         game.update()
 
-        # Обновление позиции спрайта
+        # Стрельба игрока
+        if pygame.mouse.get_pressed()[0]:
+            player_gun_ship.shot_event()
+
+        # Обновление позиции игрока
         current_mouse_pos = pygame.mouse.get_pos()
         if current_mouse_pos != prev_mouse_pos:
             prev_mouse_pos = current_mouse_pos
-        player_gan_ship.update(*current_mouse_pos)
+        player_gun_ship.update(*current_mouse_pos)
         screen.fill((0, 0, 0))
 
         # Обновление и отрисовка спрайтов
@@ -48,10 +48,8 @@ def main():
         sprites_group.enemy_group.draw(screen)
         sprites_group.player_shot_group.draw(screen)
         sprites_group.neutral_group.draw(screen)
-        player_gan_ship.render()
-        game.render_score()
-        game.render_live()
-        game.render_rapid()
+        player_gun_ship.render()
+        game.render()
 
         pygame.display.flip()
         clock.tick(FPS)

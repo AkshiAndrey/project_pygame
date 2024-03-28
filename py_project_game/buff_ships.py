@@ -38,7 +38,7 @@ class Ship(pygame.sprite.Sprite):
 class HpBonus(Ship):
     def __init__(self, screen, game):
         super().__init__(screen, game, neutral_group)
-        self.image = load_image('sprites/ship_e.png', -1)
+        self.image = load_image('sprites/blueH.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
 
@@ -50,7 +50,7 @@ class HpBonus(Ship):
 class RapidFire(Ship):
     def __init__(self, screen, game):
         super().__init__(screen, game, neutral_group)
-        self.image = load_image('sprites/ship_e.png', -1)
+        self.image = load_image('sprites/blueA.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
 
@@ -58,5 +58,19 @@ class RapidFire(Ship):
         self.rect.centery += 1
         pass
 
-buff_ships = {'HpBonus': 20, "RapidFire": 0.2}
-buff_ships_class_list = [HpBonus, RapidFire, RapidFire, RapidFire]
+
+class SpeedUp(Ship):
+    def __init__(self, screen, game):
+        super().__init__(screen, game, neutral_group)
+        self.image = load_image('sprites/blueS.png', -1)
+        self.rect.centerx = random.randint(0, self.screen_rect.w)
+        self.rect.top = self.screen_rect.top + 5
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        self.rect.centery += 1
+        pass
+
+
+buff_ships = {'HpBonus': 20, "RapidFire": 0.2, 'SpeedUp': 1}
+buff_ships_class_list = [HpBonus, HpBonus, RapidFire, RapidFire, RapidFire, RapidFire, RapidFire,
+                         SpeedUp, SpeedUp, SpeedUp]
