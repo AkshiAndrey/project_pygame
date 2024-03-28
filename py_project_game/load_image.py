@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 
+
 def load_image(name, colorkey=None):
     fullname = os.path.join(name)
     # если файл не существует, то выходим

@@ -1,37 +1,72 @@
+import random
+import sys
+import time
+
 import pygame
 from sprites_group import list_all
 from gun_ship import EnemyShip, PlayerShip
+import buff_ships
 
 
 class Game:
     def __init__(self, screen):
         self.sprites_group = list_all
-        self.hard_lvl = 0
+        self.hard_lvl = 1
         self.hard_lvl_list = [i for i in range(1, 1000000)]
         self.enemy_speed_spawn = 95
         self.screen = screen
-        self.game_score = 5
+        self.game_score = 0
+        self.hit_point = 50
+        self.time_bonus = time.time()
+        self.timer_bonus = time.time()
+        self.bonus_time = 5
+        self.rapid_fire = 1
 
     def update(self):
-        """Обновление счета и сложности"""
-        self.game_score += len(self.sprites_group[0])
-        self.hard_lvl = self.hard_lvl_list.index(1 + self.game_score // 100)
-        print(self.hard_lvl)
-        self.enemy_spawn()
+        """Обновление сложности и спавн врагов"""
+        self.hard_lvl = self.hard_lvl_list.index(1 + self.game_score // 20)
+        # for i in range(1 + 1 * (self.hard_lvl // 50)):
+        # self.enemy_spawn()
+        if self.timer_bonus - self.time_bonus > self.bonus_time:
+            # print(1)
+            # buff_ships.HpBonus(self.screen, self)
+            random.choice(buff_ships.buff_ships_class_list)(self.screen, self)
+            self.time_bonus = time.time()
+        self.timer_bonus = time.time()
+
+        # print(self.game_score)
+        if self.hit_point <= 0:
+            self.end_game()
+
 
     def enemy_spawn(self):
-        '''Спавн врагов'''
+        '''Спавн врагов от скорости'''
         if self.enemy_speed_spawn == 100:
             self.enemy_speed_spawn = 0
-            EnemyShip(self.screen)
+            EnemyShip(self.screen, self)
         elif self.enemy_speed_spawn < 100:
-            self.enemy_speed_spawn += 2
+            self.enemy_speed_spawn += 2 + min(self.hard_lvl // 50, 50)
         else:
             self.enemy_speed_spawn = 100
 
     def render_score(self):
-        font_color = (50, 50, 50)
+        font_color = (200, 10, 10)
         font = pygame.font.Font(None, 20)
         text = font.render(f'SCORE ({self.game_score})', 1, font_color)
         self.screen.blit(text, (30, 30))
 
+    def render_live(self):
+        font_color = (10, 200, 10)
+        font = pygame.font.Font(None, 20)
+        text = font.render(f'HP ({self.hit_point})', 1, font_color)
+        self.screen.blit(text, (30, 60))
+
+    def render_rapid(self):
+        font_color = (10, 10, 200)
+        font = pygame.font.Font(None, 20)
+        text = font.render(f'HP ({self.rapid_fire})', 1, font_color)
+        self.screen.blit(text, (30, 90))
+
+    def end_game(self):
+        pygame.display.quit()
+        sys.exit()
