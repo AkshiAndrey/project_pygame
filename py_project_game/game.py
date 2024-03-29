@@ -4,7 +4,8 @@ import time
 
 import pygame
 from sprites_group import list_all
-from gun_ship import EnemyShip, PlayerShip
+from gun_ship import EnemyShip, EnemyShip1, EnemyShip2, EnemyShip3, EnemyShip4, ship_list
+
 import buff_ships
 
 
@@ -22,10 +23,17 @@ class Game:
         self.bonus_time = 5
         self.rapid_fire = 1
         self.speed = 5
+        self.enemy_pool = [EnemyShip] * 10
+        self.enemy_pool += [EnemyShip1] * 3
+        self.enemy_pool += [EnemyShip1, EnemyShip1, EnemyShip] * 3
+        self.enemy_pool += [EnemyShip1, EnemyShip2] * 3
+        self.enemy_pool += [EnemyShip1, EnemyShip2, EnemyShip1, EnemyShip3] * 4
+        self.enemy_pool += [ EnemyShip2, EnemyShip1, EnemyShip3, EnemyShip3] * 3
+        self.enemy_pool += [ EnemyShip2, EnemyShip4, EnemyShip3, EnemyShip3] * 3
 
     def update(self):
         """Обновление сложности и спавн врагов"""
-        self.hard_lvl = self.hard_lvl_list.index(1 + self.game_score // 200)
+        self.hard_lvl = self.hard_lvl_list.index(1 + self.game_score // 300)
         for i in range(1 + 1 * self.hard_lvl):
             self.enemy_spawn()
         if self.timer_bonus - self.time_bonus > self.bonus_time:
@@ -42,13 +50,16 @@ class Game:
 
     def enemy_spawn(self):
         '''Спавн врагов от скорости'''
-        if self.enemy_speed_spawn == 100:
+        if self.enemy_speed_spawn == 200:
             self.enemy_speed_spawn = 0
-            EnemyShip(self.screen, self)
-        elif self.enemy_speed_spawn < 100:
+            start = min(5, self.hard_lvl - 1)
+            stop = min(self.hard_lvl + 10, 69)
+            index = random.choice(range(start, stop))
+            self.enemy_pool[index](self.screen, self)
+        elif self.enemy_speed_spawn < 200:
             self.enemy_speed_spawn += 2 + min(self.hard_lvl // 50, 50)
         else:
-            self.enemy_speed_spawn = 100
+            self.enemy_speed_spawn = 200
 
     def render_score(self):
         font_color = (200, 10, 10)

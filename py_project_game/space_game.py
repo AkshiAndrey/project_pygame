@@ -4,6 +4,16 @@ import sprites_group
 from game import Game
 
 from gun_ship import PlayerShip
+list_all = sprites_group.list_all
+
+
+def clear_sprite_scrap(wind_height):
+    global list_all
+    # print(list_all)
+    for group in list_all[:-1]:
+        for sprite in group:
+            if 0 > sprite.rect.centery or sprite.rect.centery > wind_height:
+                group.remove(sprite)
 
 
 def main():
@@ -50,6 +60,7 @@ def main():
         sprites_group.neutral_group.draw(screen)
         player_gun_ship.render()
         game.render()
+        clear_sprite_scrap(WINDOW_HEIGHT)
 
         pygame.display.flip()
         clock.tick(FPS)
