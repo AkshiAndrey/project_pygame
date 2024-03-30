@@ -19,9 +19,9 @@ def start_screen(screen, width=1200, height=800, clock=pygame.time.Clock(), fps=
                       "Спасай беженцев и получай усиления корабля,",
                       "Твой подвиг не будет забыт"]
 
-        fon = pygame.transform.scale(load_image('sprites/start_fon.png'), (width, height))
+        fon = pygame.transform.scale(load_image('data/sprites/start_fon.png'), (width, height))
         screen.blit(fon, (0, 0))
-        font = pygame.font.Font('fonts/Donpoligrafbum-Bold.otf', 20)
+        font = pygame.font.Font('data/fonts/Donpoligrafbum-Bold.otf', 20)
         text_coord = 50
         for line in intro_text:
             string_rendered = font.render(line, 1, pygame.Color('#28343E'))
@@ -48,7 +48,7 @@ def start_screen(screen, width=1200, height=800, clock=pygame.time.Clock(), fps=
             text_coord += intro_rect.height
             screen.blit(string_rendered, intro_rect)
 
-        font = pygame.font.Font('fonts/SAIBA-45-Regular-(v1.1).otf', 40)
+        font = pygame.font.Font('data/fonts/SAIBA-45-Regular-(v1.1).otf', 40)
         for line in text:
             string_rendered = font.render(' : '.join(line), 1, pygame.Color('#7d2826'))
             intro_rect = string_rendered.get_rect()

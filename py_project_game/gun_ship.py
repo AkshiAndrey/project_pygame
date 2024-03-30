@@ -17,7 +17,7 @@ class Ship(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.screen = screen
         self.game = game
-        self.image = load_image('sprites/ship.png', -1)
+        self.image = load_image('data/sprites/ship.png', -1)
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
         self.score_point = 1
@@ -47,11 +47,11 @@ class PlayerShip(Ship):
         self.rect.centery = self.screen_rect.bottom - self.rect.height // 2 + 1
         self.game = game
         self.speed = 5
-        self.rapid_fire = 0.1
+        self.rapid_fire = 1
         self.time_shot = time.time()
         self.timer_shot = time.time()
         self.hit_point = 20
-        self.guns = 9
+        self.guns = 1
 
     def render(self):
         """Рисование корабля"""
@@ -155,7 +155,7 @@ class LitePlayerShot(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_1.png')
+        self.image = load_image('data/sprites/shot_1.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 2
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 5
@@ -182,7 +182,7 @@ class LitePlayerShot2(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_1.png')
+        self.image = load_image('data/sprites/shot_1.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 4
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 5
@@ -208,7 +208,7 @@ class LitePlayerShot3(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_1.png')
+        self.image = load_image('data/sprites/shot_1.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 4
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 5
@@ -235,7 +235,7 @@ class LitePlayerShot4(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_1.png')
+        self.image = load_image('data/sprites/shot_1.png')
         self.rect.centerx = self.player_ship.rect.centerx
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 5
@@ -262,7 +262,7 @@ class MediumPlayerShot(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_3.png')
+        self.image = load_image('data/sprites/shot_3.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 2
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 10
@@ -288,7 +288,7 @@ class MediumPlayerShot2(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_3.png')
+        self.image = load_image('data/sprites/shot_3.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 4
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 10
@@ -314,7 +314,7 @@ class MediumPlayerShot3(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_3.png')
+        self.image = load_image('data/sprites/shot_3.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 4
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 10
@@ -341,7 +341,7 @@ class MediumPlayerShot4(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_3.png')
+        self.image = load_image('data/sprites/shot_3.png')
         self.rect.centerx = self.player_ship.rect.centerx
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 10
@@ -368,7 +368,7 @@ class HardPlayerShot(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/pngegg.png')
+        self.image = load_image('data/sprites/pngegg.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 3
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 1 + self.player_ship.guns
@@ -393,7 +393,7 @@ class HardPlayerShot2(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/pngegg.png')
+        self.image = load_image('data/sprites/pngegg.png')
         self.rect.centerx = self.player_ship.rect.centerx + self.player_ship.rect.w // 4
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 5 + self.player_ship.guns
@@ -419,7 +419,7 @@ class HardPlayerShot3(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/pngegg.png')
+        self.image = load_image('data/sprites/pngegg.png')
         self.rect.centerx = self.player_ship.rect.centerx
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 5 + self.player_ship.guns
@@ -445,7 +445,7 @@ class EnemyShip(Ship):
 
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
-        self.image = load_image('sprites/ship_e.png', -1)
+        self.image = load_image('data/sprites/ship_e.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
         self.score_point = 5
@@ -471,11 +471,11 @@ class EnemyShip(Ship):
 
 
 class EnemyShip1(Ship):
-    """Простейший корабль противника"""
+    """линейный корабль противника"""
 
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
-        self.image = load_image('sprites/ship_e1.png', -1)
+        self.image = load_image('data/sprites/ship_e1.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
         self.score_point = 15
@@ -500,11 +500,11 @@ class EnemyShip1(Ship):
 
 
 class EnemyShip2(Ship):
-    """Простейший корабль противника"""
+    """артплатформа корабль противника"""
 
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
-        self.image = load_image('sprites/fire_ship.png', -1)
+        self.image = load_image('data/sprites/fire_ship.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
         self.score_point = 5
@@ -529,11 +529,11 @@ class EnemyShip2(Ship):
 
 
 class EnemyShip3(Ship):
-    """Простейший корабль противника"""
+    """брандер корабль противника"""
 
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
-        self.image = load_image('sprites/kamikaze.png', -1)
+        self.image = load_image('data/sprites/kamikaze.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
         self.score_point = 5
@@ -550,18 +550,18 @@ class EnemyShip3(Ship):
 
 
 class EnemyShip4(Ship):
-    """Простейший корабль противника"""
+    """Защитная база корабль противника"""
 
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
-        self.image = load_image('sprites/base_boss2.png', -1)
+        self.image = load_image('data/sprites/base_boss2.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
         self.score_point = 2000
         self.time_shot = time.time() - 2
         self.timer_shot = time.time()
         self.rapid_fire = 2
-        self.hit_point = 2000
+        self.hit_point = 3000
         self.damage = 5000
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -585,7 +585,7 @@ class LiteEnemyShot(Ship):
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, enemy_group)
         self.player_ship = pl_ship
-        self.image = load_image('sprites/shot_2.png')
+        self.image = load_image('data/sprites/shot_2.png')
         self.rect.centerx = self.player_ship.rect.centerx
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 1

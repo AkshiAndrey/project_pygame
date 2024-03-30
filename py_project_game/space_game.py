@@ -26,11 +26,11 @@ def main():
 
     pygame.init()
     pygame.mixer.init()
-    pygame.mixer.music.load('main_track.mp3')
+    pygame.mixer.music.load('data/main_track.mp3')
     pygame.mixer.music.play(-1)
     screen = pygame.display.set_mode(WINDOW_SIZE)
     window_rect = pygame.Rect((0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
-    fon = pygame.transform.scale(load_image('sprites/main_fon.png'), (WINDOW_WIDTH, WINDOW_HEIGHT))
+    fon = pygame.transform.scale(load_image('data/sprites/main_fon.png'), (WINDOW_WIDTH, WINDOW_HEIGHT))
     fon_y = 0
     pygame.display.set_caption("HellCosmoBattle")
     clock = pygame.time.Clock()

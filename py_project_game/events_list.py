@@ -10,7 +10,7 @@ class BoomCrash(pygame.sprite.Sprite):
     def __init__(self, screen, x, y, *groups: event_group):
         super().__init__(*groups)
         self.screen = screen
-        self.image = load_image('sprites/boom.png', -1)
+        self.image = load_image('data/sprites/boom.png', -1)
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.time = time.time()
@@ -24,14 +24,14 @@ class BoomCrash(pygame.sprite.Sprite):
 class LiteShotBoom(BoomCrash):
     def __init__(self, screen, x, y, *groups: (event_group, player_shot_group)):
         super().__init__(screen, x, y, *groups)
-        self.image = load_image('sprites/liteshotboom.png', -1)
+        self.image = load_image('data/sprites/liteshotboom.png', -1)
         self.life_time = 0.2
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, screen,  x, y, columns=5, rows=3):
         super().__init__(event_group)
-        self.sheet = load_image('sprites_animated/boom_ship.png')
+        self.sheet = load_image('data/sprites_animated/boom_ship.png')
         self.screen = screen
         self.frames = []
         self.cut_sheet(self.sheet, columns, rows)

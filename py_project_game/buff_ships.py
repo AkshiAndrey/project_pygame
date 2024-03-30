@@ -15,7 +15,7 @@ class Ship(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.screen = screen
         self.game = game
-        self.image = load_image('sprites/ship.png', -1)
+        self.image = load_image('data/sprites/ship.png', -1)
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
         self.score_point = 10
@@ -38,7 +38,7 @@ class Ship(pygame.sprite.Sprite):
 class HpBonus(Ship):
     def __init__(self, screen, game):
         super().__init__(screen, game, neutral_group)
-        self.image = load_image('sprites/blueH.png', -1)
+        self.image = load_image('data/sprites/blueH.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
 
@@ -50,7 +50,7 @@ class HpBonus(Ship):
 class RapidFire(Ship):
     def __init__(self, screen, game):
         super().__init__(screen, game, neutral_group)
-        self.image = load_image('sprites/blueA.png', -1)
+        self.image = load_image('data/sprites/blueA.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
 
@@ -62,7 +62,7 @@ class RapidFire(Ship):
 class SpeedUp(Ship):
     def __init__(self, screen, game):
         super().__init__(screen, game, neutral_group)
-        self.image = load_image('sprites/blueS.png', -1)
+        self.image = load_image('data/sprites/blueS.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
 
