@@ -50,10 +50,8 @@ class PlayerShip(Ship):
         self.rapid_fire = 1
         self.time_shot = time.time()
         self.timer_shot = time.time()
-        self.hit_point = 50
-        self.guns = 9
-
-
+        self.hit_point = 5
+        self.guns = 1
 
     def render(self):
         """Рисование корабля"""
@@ -86,21 +84,22 @@ class PlayerShip(Ship):
         if crash:
             crash[0].score_up()
             self.hit_point -= crash[0].damage
-            if crash[0].__class__.__name__ in ship_list:
-                event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
-            elif crash[0].__class__.__name__ in shot_list:
-                event_group.add(events_list.LiteShotBoom(self.screen, self.rect.centerx, self.rect.top))
+            for i in crash:
+                if crash[0].__class__.__name__ in ship_list:
+                    event_group.add(events_list.BoomCrash(self.screen, *crash[0].rect.center))
+                elif crash[0].__class__.__name__ in shot_list:
+                    event_group.add(events_list.LiteShotBoom(self.screen, self.rect.centerx, self.rect.top))
         # Столкновения с бафами
         crash = pygame.sprite.spritecollide(self, neutral_group, True)
         if crash:
             for ship in crash:
                 self.upgrade_ship(ship)
+        print(self.hit_point)
         self.game.hit_point = self.hit_point
 
     def shot_event(self):
         """Выстрел"""
         if self.timer_shot - self.time_shot > self.rapid_fire:
-            print(self.guns)
             if 4 > self.guns >= 1:
                 LitePlayerShot(self.screen, self.game, self)
             if 5 > self.guns >= 2:
@@ -146,12 +145,14 @@ class PlayerShip(Ship):
 
         if 'Sp' in ship.__class__.__name__:
             self.speed += buff_ships.buff_ships[ship.__class__.__name__]
+            self.game.speed = self.speed
         pass
 
 
 # Классы выстрелов игрока
 class LitePlayerShot(Ship):
     """Легкий выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -178,6 +179,7 @@ class LitePlayerShot(Ship):
 
 class LitePlayerShot2(Ship):
     """Второе орудиe"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -203,6 +205,7 @@ class LitePlayerShot2(Ship):
 
 class LitePlayerShot3(Ship):
     """Второе орудиe"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -229,6 +232,7 @@ class LitePlayerShot3(Ship):
 
 class LitePlayerShot4(Ship):
     """Второе орудиe"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -255,6 +259,7 @@ class LitePlayerShot4(Ship):
 
 class MediumPlayerShot(Ship):
     """Средний выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -280,6 +285,7 @@ class MediumPlayerShot(Ship):
 
 class MediumPlayerShot2(Ship):
     """Средний выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -305,6 +311,7 @@ class MediumPlayerShot2(Ship):
 
 class MediumPlayerShot3(Ship):
     """Средний выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -331,6 +338,7 @@ class MediumPlayerShot3(Ship):
 
 class MediumPlayerShot4(Ship):
     """Средний выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -357,6 +365,7 @@ class MediumPlayerShot4(Ship):
 
 class HardPlayerShot(Ship):
     """Легкий выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -380,8 +389,10 @@ class HardPlayerShot(Ship):
                 enemy_group.remove(crash[0])
         pass
 
+
 class HardPlayerShot2(Ship):
     """Легкий выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -409,6 +420,7 @@ class HardPlayerShot2(Ship):
 
 class HardPlayerShot3(Ship):
     """Легкий выстрел игрока"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, player_shot_group)
         self.player_ship = pl_ship
@@ -436,6 +448,7 @@ class HardPlayerShot3(Ship):
 # Классы вражеских кораблей
 class EnemyShip(Ship):
     """Простейший корабль противника"""
+
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
         self.image = load_image('sprites/ship_e.png', -1)
@@ -465,6 +478,7 @@ class EnemyShip(Ship):
 
 class EnemyShip1(Ship):
     """Простейший корабль противника"""
+
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
         self.image = load_image('sprites/ship_e1.png', -1)
@@ -493,6 +507,7 @@ class EnemyShip1(Ship):
 
 class EnemyShip2(Ship):
     """Простейший корабль противника"""
+
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
         self.image = load_image('sprites/fire_ship.png', -1)
@@ -518,8 +533,10 @@ class EnemyShip2(Ship):
             self.time_shot = time.time()
         self.timer_shot = time.time()
 
+
 class EnemyShip3(Ship):
     """Простейший корабль противника"""
+
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
         self.image = load_image('sprites/kamikaze.png', -1)
@@ -540,16 +557,17 @@ class EnemyShip3(Ship):
 
 class EnemyShip4(Ship):
     """Простейший корабль противника"""
+
     def __init__(self, screen, game):
         super().__init__(screen, game, enemy_group)
-        self.image = load_image('sprites/base_boss1.png', -1)
+        self.image = load_image('sprites/base_boss2.png', -1)
         self.rect.centerx = random.randint(0, self.screen_rect.w)
         self.rect.top = self.screen_rect.top + 5
         self.score_point = 2000
         self.time_shot = time.time() - 2
         self.timer_shot = time.time()
         self.rapid_fire = 2
-        self.hit_point = 5000
+        self.hit_point = 2000
         self.damage = 5000
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -566,10 +584,10 @@ class EnemyShip4(Ship):
         self.timer_shot = time.time()
 
 
-
 # Классы выстрелов противника
 class LiteEnemyShot(Ship):
     """Легкий выстрел противника"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, enemy_group)
         self.player_ship = pl_ship
@@ -577,7 +595,6 @@ class LiteEnemyShot(Ship):
         self.rect.centerx = self.player_ship.rect.centerx
         self.rect.centery = self.player_ship.rect.centery + 20
         self.damage = 1
-
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         """Логика стрельбы противника, базовый снаряд"""
@@ -589,6 +606,7 @@ class LiteEnemyShot(Ship):
 
 class MediumEnemyShot(LiteEnemyShot):
     """улучшенный снаряд противника"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, pl_ship)
         self.damage = 5
@@ -596,11 +614,12 @@ class MediumEnemyShot(LiteEnemyShot):
 
 class HardEnemyShot(LiteEnemyShot):
     """Топовый снаряд противника"""
+
     def __init__(self, screen, game, pl_ship):
         super().__init__(screen, game, pl_ship)
         self.hit_point = 20000
         self.damage = 10
 
 
-ship_list = ['EnemyShip', 'EnemyShip', 'EnemyShip', 'EnemyShip', 'EnemyShip', 'EnemyShip']
+ship_list = ['EnemyShip', 'EnemyShip1', 'EnemyShip2', 'EnemyShip3', 'EnemyShip4', 'EnemyShip5']
 shot_list = ['LiteEnemyShot', 'HardEnemyShot', 'MediumEnemyShot']

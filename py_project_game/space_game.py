@@ -1,15 +1,19 @@
+
 import pygame
 import sys
 import sprites_group
 from game import Game
-
+from start_screen import start_screen
+from final_screen import final_screen
+from load_image import load_image
 from gun_ship import PlayerShip
+
+
 list_all = sprites_group.list_all
 
 
 def clear_sprite_scrap(wind_height):
     global list_all
-    # print(list_all)
     for group in list_all[:-1]:
         for sprite in group:
             if 0 > sprite.rect.centery or sprite.rect.centery > wind_height:
@@ -21,52 +25,56 @@ def main():
     FPS = 60
 
     pygame.init()
+
     screen = pygame.display.set_mode(WINDOW_SIZE)
-    pygame.display.set_caption("Косможуки")
+    fon = pygame.transform.scale(load_image('sprites/main_fon.png'), (WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.display.set_caption("HellCosmoBattle")
     clock = pygame.time.Clock()
 
     game = Game(screen)
-    player_gun_ship = PlayerShip(screen, game)
-    prev_mouse_pos = player_gun_ship.rect.center
+    while True:
+        game.status = True
+        start_screen(screen, game=game)
 
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        player_gun_ship = PlayerShip(screen, game)
+        prev_mouse_pos = player_gun_ship.rect.center
 
-        # Обновление статуса игры
-        game.update()
+        while game.status:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.display.quit()
+                    sys.exit()
 
-        # Стрельба игрока
-        if pygame.mouse.get_pressed()[0]:
-            player_gun_ship.shot_event()
+            # Стрельба игрока
+            if pygame.mouse.get_pressed()[0]:
+                player_gun_ship.shot_event()
 
-        # Обновление позиции игрока
-        current_mouse_pos = pygame.mouse.get_pos()
-        if current_mouse_pos != prev_mouse_pos:
-            prev_mouse_pos = current_mouse_pos
-        player_gun_ship.update(*current_mouse_pos)
-        screen.fill((0, 0, 0))
+            # Обновление позиции игрока
+            current_mouse_pos = pygame.mouse.get_pos()
+            if current_mouse_pos != prev_mouse_pos:
+                prev_mouse_pos = current_mouse_pos
+            player_gun_ship.update(*current_mouse_pos)
+            screen.fill((0, 0, 0))
+            screen.blit(fon, (0, 0))
 
-        # Обновление и отрисовка спрайтов
-        sprites_group.event_group.update()
-        sprites_group.enemy_group.update()
-        sprites_group.player_shot_group.update()
-        sprites_group.neutral_group.update()
-        sprites_group.event_group.draw(screen)
-        sprites_group.enemy_group.draw(screen)
-        sprites_group.player_shot_group.draw(screen)
-        sprites_group.neutral_group.draw(screen)
-        player_gun_ship.render()
-        game.render()
-        clear_sprite_scrap(WINDOW_HEIGHT)
+            # Обновление и отрисовка спрайтов
+            sprites_group.event_group.update()
+            sprites_group.enemy_group.update()
+            sprites_group.player_shot_group.update()
+            sprites_group.neutral_group.update()
+            sprites_group.event_group.draw(screen)
+            sprites_group.enemy_group.draw(screen)
+            sprites_group.player_shot_group.draw(screen)
+            sprites_group.neutral_group.draw(screen)
+            player_gun_ship.render()
+            game.render()
+            clear_sprite_scrap(WINDOW_HEIGHT)
+            # Обновление статуса игры
+            game.update()
 
-        pygame.display.flip()
-        clock.tick(FPS)
-
-    pygame.display.quit()
-    sys.exit()
+            pygame.display.flip()
+            clock.tick(FPS)
+        final_screen(screen, game=game)
 
 
 if __name__ == "__main__":
