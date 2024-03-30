@@ -25,9 +25,13 @@ def main():
     FPS = 60
 
     pygame.init()
-
+    pygame.mixer.init()
+    pygame.mixer.music.load('main_track.mp3')
+    pygame.mixer.music.play(-1)
     screen = pygame.display.set_mode(WINDOW_SIZE)
+    window_rect = pygame.Rect((0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
     fon = pygame.transform.scale(load_image('sprites/main_fon.png'), (WINDOW_WIDTH, WINDOW_HEIGHT))
+    fon_y = 0
     pygame.display.set_caption("HellCosmoBattle")
     clock = pygame.time.Clock()
 
@@ -45,6 +49,12 @@ def main():
                     pygame.display.quit()
                     sys.exit()
 
+            mx, my = pygame.mouse.get_pos()
+            if not window_rect.collidepoint(mx, my):
+                mx = min(max(window_rect.left, mx), window_rect.right - 1)
+                my = min(max(window_rect.top, my), window_rect.bottom - 1)
+                pygame.mouse.set_pos((mx, my))
+
             # Стрельба игрока
             if pygame.mouse.get_pressed()[0]:
                 player_gun_ship.shot_event()
@@ -54,8 +64,15 @@ def main():
             if current_mouse_pos != prev_mouse_pos:
                 prev_mouse_pos = current_mouse_pos
             player_gun_ship.update(*current_mouse_pos)
-            screen.fill((0, 0, 0))
-            screen.blit(fon, (0, 0))
+
+            #Анимация фона
+            fon_y += 2
+            if fon_y > WINDOW_HEIGHT:
+                fon_y = 0
+
+            # Отрисовка фона
+            screen.blit(fon, (0, fon_y))
+            screen.blit(fon, (0, fon_y - WINDOW_HEIGHT))
 
             # Обновление и отрисовка спрайтов
             sprites_group.event_group.update()

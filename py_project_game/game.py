@@ -18,7 +18,7 @@ class Game:
         self.hard_lvl_list = [i for i in range(1, 1000000)]
         self.enemy_speed_spawn = 95
         self.screen = screen
-        self.game_score = 0
+        self.game_score = 20000
         self.hit_point = 50
         self.time_bonus = time.time()
         self.timer_bonus = time.time()
